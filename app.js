@@ -1,7 +1,14 @@
 const http = require('http');
 
-const { requestHandler } = require('./routes');
+const express = require('express');
 
-const server = http.createServer(requestHandler);
+const app = express();
+
+app.use((req, res, next) => {
+    console.log('middleware');
+    res.send('<h1>Express</h1>')
+});
+
+const server = http.createServer(app);
 
 server.listen(8000);
