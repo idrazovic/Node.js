@@ -2,37 +2,47 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
-// const adminRoutes = require('./routes/admin');
-// const shopRoutes = require('./routes/shop');
 const errorController = require('./controllers/error');
-const mongoConnect = require('./util/database');
+const User = require('./models/user');
 
 const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
-    // User.findByPk(1)
-    //     .then(user => {
-    //         req.user = user;
-    //         next();
-    //     })
-    //     .catch(err => console.log(err));
+    User.findById('66579062cdaed3160eed7ce9')
+        .then(user => {
+            req.user = new User(user.name, user.email, user.cart, user._id);
+            next();
+        })
+        .catch(err => console.log(err));
 });
 
-// app.use('/admin', adminRoutes);
-// app.use(shopRoutes);
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-mongoConnect()
+mongoose
+    .connect(
+        `mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@nodejs-shop.os5pfbg.mongodb.net/?retryWrites=true&w=majority&appName=nodejs-shop`,
+        {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        }
+    )
     .then(() => {
         app.listen(3000);
     })
-    .catch(err => console.log(err));
-
+    .catch(err => {
+        console.log(err);
+    });
