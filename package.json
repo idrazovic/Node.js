@@ -1,23 +1,23 @@
 {
-  "name": "nodejs-complete-guide",
+  "name": "nodejs-shop",
   "version": "1.0.0",
-  "description": "Complete Node.js Guide",
+  "description": "Node.js Shop",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --env-file=.env app.js",
     "start-server": "node app.js"
   },
-  "author": "Maximilian Schwarzmüller",
+  "author": "Igor Drazovic",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^1.18.3"
+    "nodemon": "^3.1.2"
   },
   "dependencies": {
-    "body-parser": "^1.18.3",
-    "ejs": "^2.6.1",
-    "express": "^4.16.3",
-    "mongodb": "^3.1.6",
+    "body-parser": "^1.20.2",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "mongodb": "^6.7.0",
     "mongoose": "^8.4.0"
   }
 }

@@ -15,13 +15,15 @@ app.set('views', 'views');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
+const defaultUserId = '665998c95861317ef49c7a9e';
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
-    User.findById('66579062cdaed3160eed7ce9')
+    User.findById(defaultUserId)
         .then(user => {
-            req.user = new User(user.name, user.email, user.cart, user._id);
+            req.user = user;
             next();
         })
         .catch(err => console.log(err));
@@ -34,13 +36,21 @@ app.use(errorController.get404);
 
 mongoose
     .connect(
-        `mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@nodejs-shop.os5pfbg.mongodb.net/?retryWrites=true&w=majority&appName=nodejs-shop`,
-        {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        }
+        `mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@nodejs-shop.os5pfbg.mongodb.net/shop?retryWrites=true&w=majority&appName=nodejs-shop`
     )
     .then(() => {
+        User.findById(defaultUserId)
+            .then(user => {
+                if (!user) {
+                    const user = new User({
+                        name: 'Igor',
+                        email: 'igor@test.com',
+                        cart: { items: [] }
+                    })
+                    user.save();
+                }
+            });
+
         app.listen(3000);
     })
     .catch(err => {
